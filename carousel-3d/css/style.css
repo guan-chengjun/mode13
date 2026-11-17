@@ -1,0 +1,227 @@
+/* ============================================================
+ * 交互式 3D 旋转木马 —— 界面样式
+ * 设计目标：简洁干净、深色玻璃拟态面板，适配三种天气背景
+ * ============================================================ */
+
+:root {
+  --ui-bg: rgba(18, 24, 34, 0.78);
+  --ui-border: rgba(255, 255, 255, 0.14);
+  --ui-text: #eef2f7;
+  --ui-text-dim: #aeb8c6;
+  --accent: #4c9aff;
+  --accent-soft: rgba(76, 154, 255, 0.22);
+  --active-bg: rgba(76, 154, 255, 0.32);
+  --radius: 12px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+  color: var(--ui-text);
+}
+
+/* 3D 画布容器 */
+#scene-container {
+  position: fixed;
+  inset: 0;
+}
+#scene-container canvas { display: block; }
+
+/* 玻璃拟态通用样式 */
+.glass {
+  background: var(--ui-bg);
+  border: 1px solid var(--ui-border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+}
+
+/* ---------------- 顶部工具栏 ---------------- */
+.toolbar {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 18px;
+  padding: 10px 16px;
+}
+
+.toolbar__title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.toolbar__group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 按钮 */
+.btn {
+  appearance: none;
+  border: 1px solid var(--ui-border);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--ui-text);
+  font-size: 13px;
+  line-height: 1;
+  padding: 9px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.05s ease;
+  user-select: none;
+}
+.btn:hover { background: rgba(255, 255, 255, 0.16); }
+.btn:active { transform: translateY(1px); }
+.btn[aria-pressed="true"],
+.btn.is-active {
+  background: var(--active-bg);
+  border-color: var(--accent);
+}
+.btn--primary[aria-pressed="true"] {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+/* 速度滑块 */
+.speed {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--ui-text-dim);
+  white-space: nowrap;
+}
+.speed input[type="range"] {
+  width: 110px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.speed span {
+  min-width: 34px;
+  color: var(--ui-text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------------- 底部提示 ---------------- */
+.hint {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  padding: 8px 18px;
+  font-size: 12.5px;
+  color: var(--ui-text-dim);
+  white-space: nowrap;
+}
+
+/* ---------------- 部件讲解面板 ---------------- */
+.info-panel {
+  position: fixed;
+  top: 88px;
+  right: 16px;
+  bottom: 16px;
+  width: min(340px, calc(100vw - 32px));
+  z-index: 20;
+  padding: 22px 22px 18px;
+  overflow-y: auto;
+  animation: panel-in 0.22s ease;
+}
+.info-panel[hidden] { display: none; }
+
+@keyframes panel-in {
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.info-panel__close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--ui-text);
+  font-size: 20px;
+  cursor: pointer;
+}
+.info-panel__close:hover { background: rgba(255, 255, 255, 0.22); }
+
+.info-panel__eyebrow {
+  margin: 0 0 6px;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--accent);
+}
+.info-panel__title {
+  margin: 0 0 16px;
+  font-size: 22px;
+}
+.info-panel__body { margin: 0; }
+.info-panel__body dt {
+  margin-top: 14px;
+  font-size: 13px;
+  color: var(--accent);
+}
+.info-panel__body dd {
+  margin: 6px 0 0;
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--ui-text);
+}
+.info-panel__meta {
+  margin-top: 18px;
+  padding-top: 12px;
+  border-top: 1px solid var(--ui-border);
+  font-size: 12px;
+  color: var(--ui-text-dim);
+  line-height: 1.6;
+}
+
+/* ---------------- Toast 消息 ---------------- */
+.toast-container {
+  position: fixed;
+  left: 50%;
+  bottom: 64px;
+  transform: translateX(-50%);
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  pointer-events: none;
+}
+.toast {
+  padding: 9px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  background: rgba(18, 24, 34, 0.92);
+  border: 1px solid var(--ui-border);
+  animation: toast-in 0.2s ease;
+}
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------------- 窄屏适配 ---------------- */
+@media (max-width: 720px) {
+  .toolbar { gap: 8px; padding: 8px 10px; }
+  .toolbar__title { width: 100%; font-size: 15px; }
+  .hint { display: none; }
+}

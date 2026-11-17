@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>交互式 3D 旋转木马演示</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E%F0%9F%8E%A0%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="./css/style.css" />
+
+  <!--
+    通过 import map 以 CDN 方式引入 Three.js 生态（r160 稳定版）。
+    仅浏览器原生 ES Module，无需打包工具。
+    默认使用 unpkg；若网络环境访问受限，可整体替换为：
+      https://fastly.jsdelivr.net/npm/three@0.160.0/...
+      https://registry.npmmirror.com/three/0.160.0/files/...
+  -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <!-- 3D 渲染画布挂载点 -->
+  <div id="scene-container"></div>
+
+  <!-- 顶部工具栏 -->
+  <header class="toolbar glass">
+    <h1 class="toolbar__title">交互式 3D 旋转木马</h1>
+
+    <div class="toolbar__group">
+      <button id="btn-wireframe" class="btn" type="button" aria-pressed="false">线框透视：关</button>
+      <button id="btn-run" class="btn btn--primary" type="button" aria-pressed="true">运转：开</button>
+
+      <label class="speed">
+        动画速度
+        <input id="speed-range" type="range" min="0.2" max="2" step="0.1" value="1" />
+        <span id="speed-value">1.0×</span>
+      </label>
+    </div>
+
+    <div class="toolbar__group" role="group" aria-label="天气切换">
+      <button id="btn-weather-sunny" class="btn btn--weather is-active" type="button" aria-pressed="true">☀ 晴天</button>
+      <button id="btn-weather-night" class="btn btn--weather" type="button" aria-pressed="false">🌙 夜晚</button>
+      <button id="btn-weather-rain" class="btn btn--weather" type="button" aria-pressed="false">🌧 雨天</button>
+    </div>
+
+    <div class="toolbar__group">
+      <button id="btn-export" class="btn" type="button">导出 GLB</button>
+      <button id="btn-import" class="btn" type="button">导入 GLB</button>
+      <input id="file-input" type="file" accept=".glb,model/gltf-binary" hidden />
+    </div>
+  </header>
+
+  <!-- 底部操作提示 -->
+  <footer class="hint glass">
+    左键拖拽：环绕查看　|　滚轮：缩放　|　右键拖拽：平移　|　单击部件：查看讲解
+  </footer>
+
+  <!-- 部件讲解侧边面板 -->
+  <aside id="info-panel" class="info-panel glass" hidden>
+    <button id="panel-close" class="info-panel__close" type="button" aria-label="关闭面板">×</button>
+    <p class="info-panel__eyebrow">部件讲解</p>
+    <h2 id="panel-title" class="info-panel__title">部件名称</h2>
+    <dl class="info-panel__body">
+      <dt>结构作用</dt>
+      <dd id="panel-role"></dd>
+      <dt>功能介绍</dt>
+      <dd id="panel-desc"></dd>
+    </dl>
+    <p id="panel-meta" class="info-panel__meta"></p>
+  </aside>
+
+  <!-- 轻量消息提示 -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>
